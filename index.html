@@ -236,12 +236,38 @@
             50% { opacity: 0.4; }
         }
 
-        .hero h1 {
-            font-size: clamp(3rem, 8vw, 6rem);
+        .hero-headline {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
             font-weight: 900;
-            line-height: 1.05;
-            margin-bottom: 1.5rem;
+            line-height: 1.15;
+            margin-bottom: 2rem;
             animation: fadeInUp 0.8s ease 0.1s backwards;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .hero-prefix {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .hero-main {
+            font-size: clamp(3.5rem, 8vw, 6.5rem);
+            font-weight: 900;
+            line-height: 1;
+            display: block;
+        }
+
+        .hero-suffix {
+            font-size: clamp(1.25rem, 2.5vw, 2rem);
+            font-weight: 500;
+            color: var(--text);
+            margin-top: 0.5rem;
         }
 
         .gradient-text {
@@ -255,15 +281,8 @@
             font-size: 1.35rem;
             color: var(--text-muted);
             max-width: 700px;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             animation: fadeInUp 0.8s ease 0.2s backwards;
-        }
-
-        .hero-cta {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 4rem;
-            animation: fadeInUp 0.8s ease 0.3s backwards;
         }
 
         @keyframes fadeInUp {
@@ -780,61 +799,147 @@
             font-size: 0.95rem;
         }
 
-        /* CTA Section */
-        .cta-section {
+        /* Architecture Section */
+        .architecture-section {
             padding: 8rem 4rem;
+            background: linear-gradient(180deg, transparent, rgba(99, 102, 241, 0.03), transparent);
+        }
+
+        .architecture-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .architecture-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .architecture-header .section-desc {
+            margin: 0 auto;
+        }
+
+        .architecture-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .architecture-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .arch-layer {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.5rem;
             text-align: center;
         }
 
-        .cta-card {
-            max-width: 900px;
-            margin: 0 auto;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(34, 211, 238, 0.1));
-            border: 1px solid var(--card-border);
-            border-radius: 32px;
-            padding: 5rem;
-            position: relative;
-            overflow: hidden;
+        .arch-layer.highlight {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(34, 211, 238, 0.15));
+            border-color: rgba(99, 102, 241, 0.3);
         }
 
-        .cta-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 60%);
-            animation: rotate 30s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .cta-card h2 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta-card p {
-            font-size: 1.2rem;
+        .arch-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
             color: var(--text-muted);
-            margin-bottom: 2.5rem;
-            position: relative;
-            z-index: 1;
+            margin-bottom: 0.75rem;
         }
 
-        .cta-buttons {
+        .arch-label.accent {
+            color: var(--secondary);
+        }
+
+        .arch-items {
             display: flex;
-            gap: 1rem;
+            gap: 0.75rem;
             justify-content: center;
-            position: relative;
-            z-index: 1;
+            flex-wrap: wrap;
+        }
+
+        .arch-item {
+            padding: 0.6rem 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .arch-item.primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.8rem 2rem;
+        }
+
+        .arch-sublabel {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+        }
+
+        .arch-connector {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 0.25rem 0;
+        }
+
+        .arch-arrow {
+            color: var(--primary-light);
+            font-size: 1.25rem;
+            opacity: 0.6;
+        }
+
+        .architecture-text h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .architecture-text > p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .arch-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .arch-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .arch-icon {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .arch-feature strong {
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .arch-feature span {
+            font-size: 0.9rem;
+            color: var(--text-muted);
         }
 
         /* Footer */
@@ -907,15 +1012,24 @@
                 flex-wrap: wrap;
                 gap: 2rem;
             }
+
+            .architecture-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
         }
 
         @media (max-width: 640px) {
-            .hero h1 {
+            .hero-main {
                 font-size: 2.5rem;
             }
 
-            .hero-cta {
-                flex-direction: column;
+            .hero-prefix {
+                font-size: 1rem;
+            }
+
+            .hero-suffix {
+                font-size: 1rem;
             }
 
             .cta-card {
@@ -965,29 +1079,19 @@
             <li><a href="#governance">Governance</a></li>
             <li><a href="#personas">For Teams</a></li>
         </ul>
-        <div class="nav-cta">
-            <a href="#" class="btn btn-primary">Get Started</a>
-        </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="badge">
-            <span class="badge-dot"></span>
-            Plan-Time Governance for AI
-        </div>
-        <h1>
-            The <span class="gradient-text">Central Registry</span><br>
-            for AI Agents & MCP Servers
+        <h1 class="hero-headline">
+            <span class="hero-prefix">The</span>
+            <span class="gradient-text hero-main">Central Registry</span>
+            <span class="hero-suffix">for AI Agents & MCP Servers</span>
         </h1>
         <p class="hero-subtitle">
-            An agent catalog provides plan-time governance, reputation tracking,
-            versioning, and orchestration insights for an AI agent ecosystem.
+            Discover, consume, and track AI agents across your organization.
+            A unified platform for agent visibility and lifecycle management.
         </p>
-        <div class="hero-cta">
-            <a href="#" class="btn btn-primary btn-large">Explore the Catalog</a>
-            <a href="#" class="btn btn-ghost btn-large">View Documentation</a>
-        </div>
     </section>
 
     <!-- What Is Section -->
@@ -995,7 +1099,7 @@
         <div class="what-is-grid">
             <div class="what-is-content">
                 <span class="section-label">What is Agent Catalog?</span>
-                <h3>Your Single Source of Truth for AI Agent Governance</h3>
+                <h3>The Hub for Agent Discovery, Consumption & Tracking</h3>
                 <p>
                     Agent Catalog is the central registry and governance platform for AI agents and MCP servers.
                     It provides visibility into your agent ecosystem, enabling informed decisions at plan time
@@ -1214,11 +1318,83 @@
         </div>
     </section>
 
-    <!-- What is an Agent Catalog Section -->
-    <section class="cta-section">
-        <div class="cta-card">
-            <h2>What is an <span class="gradient-text">Agent Catalog</span>?</h2>
-            <p>An agent catalog is a centralized registry that provides visibility, governance, and lifecycle management for AI agents and MCP servers. It enables organizations to discover, evaluate, and orchestrate agents with confidence by offering reputation tracking, versioning, and compliance controls before execution.</p>
+    <!-- Agent Architecture Section -->
+    <section class="architecture-section" id="architecture">
+        <div class="architecture-container">
+            <div class="architecture-header">
+                <span class="section-label">The Bigger Picture</span>
+                <h2 class="section-title">Where Agent Catalog Fits</h2>
+                <p class="section-desc">
+                    An agent catalog is one essential component in a comprehensive agent architecture.
+                    Understanding how it connects to other systems helps maximize its value.
+                </p>
+            </div>
+            <div class="architecture-content">
+                <div class="architecture-diagram">
+                    <div class="arch-layer">
+                        <div class="arch-label">Consumption Layer</div>
+                        <div class="arch-items">
+                            <div class="arch-item">Agent Consumers</div>
+                            <div class="arch-item">Orchestrators</div>
+                            <div class="arch-item">Applications</div>
+                        </div>
+                    </div>
+                    <div class="arch-connector">
+                        <div class="arch-arrow">&#8595;</div>
+                        <div class="arch-arrow">&#8593;</div>
+                    </div>
+                    <div class="arch-layer highlight">
+                        <div class="arch-label accent">Registry Layer</div>
+                        <div class="arch-items">
+                            <div class="arch-item primary">Agent Catalog</div>
+                        </div>
+                        <div class="arch-sublabel">Discovery &bull; Tracking &bull; Governance</div>
+                    </div>
+                    <div class="arch-connector">
+                        <div class="arch-arrow">&#8595;</div>
+                        <div class="arch-arrow">&#8593;</div>
+                    </div>
+                    <div class="arch-layer">
+                        <div class="arch-label">Execution Layer</div>
+                        <div class="arch-items">
+                            <div class="arch-item">AI Agents</div>
+                            <div class="arch-item">MCP Servers</div>
+                            <div class="arch-item">Sub-Agents</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="architecture-text">
+                    <h3>A Central Hub in Your Agent Ecosystem</h3>
+                    <p>
+                        The agent catalog serves as the authoritative registry between those who consume agents
+                        and the agents themselves. It doesn't execute agents—it provides the intelligence needed
+                        to make informed decisions about which agents to use, when, and how.
+                    </p>
+                    <div class="arch-features">
+                        <div class="arch-feature">
+                            <span class="arch-icon">&#128269;</span>
+                            <div>
+                                <strong>Discovery</strong>
+                                <span>Find the right agent for any task</span>
+                            </div>
+                        </div>
+                        <div class="arch-feature">
+                            <span class="arch-icon">&#128202;</span>
+                            <div>
+                                <strong>Tracking</strong>
+                                <span>Monitor usage, performance, and trends</span>
+                            </div>
+                        </div>
+                        <div class="arch-feature">
+                            <span class="arch-icon">&#128274;</span>
+                            <div>
+                                <strong>Governance</strong>
+                                <span>Enforce policies before execution</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1229,13 +1405,6 @@
                 <div class="logo-icon">&#9670;</div>
                 Agent Catalog
             </a>
-            <div class="footer-links">
-                <a href="#">Documentation</a>
-                <a href="#">API Reference</a>
-                <a href="#">GitHub</a>
-                <a href="#">Community</a>
-                <a href="#">Blog</a>
-            </div>
             <p class="footer-copy">&copy; 2026 <a href="https://legendary.ai" style="color: var(--text-muted); text-decoration: none;">Legendary AI</a>. All rights reserved.</p>
         </div>
     </footer>

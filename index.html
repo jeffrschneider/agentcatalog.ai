@@ -1,1 +1,1278 @@
-to do 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Catalog - Plan-Time Governance for AI Agents & MCP Servers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --secondary: #22d3ee;
+            --accent: #f472b6;
+            --accent-orange: #fb923c;
+            --dark: #0f0f1a;
+            --darker: #080810;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--darker);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow-1 {
+            top: -400px;
+            right: -200px;
+            background: var(--primary);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .bg-glow-2 {
+            bottom: -400px;
+            left: -200px;
+            background: var(--secondary);
+            animation: float 25s ease-in-out infinite reverse;
+        }
+
+        .bg-glow-3 {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--accent);
+            width: 600px;
+            height: 600px;
+            opacity: 0.08;
+            animation: pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-50px, 50px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.08; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.12; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1.5rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(8, 8, 16, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: white;
+        }
+
+        .nav-cta {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            border: none;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--card-border);
+        }
+
+        .btn-ghost:hover {
+            background: var(--card-bg);
+            border-color: var(--primary);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-large {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            z-index: 1;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 50px;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--secondary);
+            border-radius: 50%;
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease 0.1s backwards;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.35rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.8s ease 0.2s backwards;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 4rem;
+            animation: fadeInUp 0.8s ease 0.3s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: flex;
+            gap: 4rem;
+            padding: 2rem;
+            animation: fadeInUp 0.8s ease 0.4s backwards;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Section Styles */
+        section {
+            position: relative;
+            z-index: 1;
+            padding: 6rem 4rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(34, 211, 238, 0.2));
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .section-desc {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+        }
+
+        /* What Is Section */
+        .what-is {
+            background: linear-gradient(180deg, transparent, rgba(99, 102, 241, 0.03), transparent);
+        }
+
+        .what-is-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-top: 4rem;
+            align-items: center;
+        }
+
+        .what-is-content h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .what-is-content p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text);
+        }
+
+        .feature-list .icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+
+        .diagram-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .diagram-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .diagram-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .diagram-dot:nth-child(1) { background: #ff5f57; }
+        .diagram-dot:nth-child(2) { background: #febc2e; }
+        .diagram-dot:nth-child(3) { background: #28c840; }
+
+        .diagram-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .diagram-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .diagram-node {
+            padding: 0.75rem 1.25rem;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .diagram-node.highlight {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+        }
+
+        .diagram-arrow {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        .diagram-subagents {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding-left: 2rem;
+            border-left: 2px solid var(--card-border);
+            margin-left: 1rem;
+        }
+
+        .diagram-subagent {
+            padding: 0.5rem 1rem;
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: var(--secondary);
+        }
+
+        /* Capabilities Section */
+        .capabilities {
+            padding: 8rem 4rem;
+        }
+
+        .capabilities-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .capabilities-header .section-desc {
+            margin: 0 auto;
+        }
+
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .capability-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .capability-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .capability-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.15);
+        }
+
+        .capability-card:hover::before {
+            opacity: 1;
+        }
+
+        .capability-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .capability-icon.purple { background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(129, 140, 248, 0.2)); }
+        .capability-icon.cyan { background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(6, 182, 212, 0.2)); }
+        .capability-icon.pink { background: linear-gradient(135deg, rgba(244, 114, 182, 0.2), rgba(236, 72, 153, 0.2)); }
+        .capability-icon.orange { background: linear-gradient(135deg, rgba(251, 146, 60, 0.2), rgba(249, 115, 22, 0.2)); }
+        .capability-icon.green { background: linear-gradient(135deg, rgba(52, 211, 153, 0.2), rgba(16, 185, 129, 0.2)); }
+        .capability-icon.blue { background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2)); }
+
+        .capability-card h3 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .capability-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* Personas Section */
+        .personas {
+            background: linear-gradient(180deg, transparent, rgba(34, 211, 238, 0.03), transparent);
+        }
+
+        .personas-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .personas-header .section-desc {
+            margin: 0 auto;
+        }
+
+        .personas-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .persona-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .persona-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--card-border);
+        }
+
+        .persona-card.users:hover { border-color: var(--secondary); }
+        .persona-card.owners:hover { border-color: var(--accent); }
+        .persona-card.admins:hover { border-color: var(--accent-orange); }
+
+        .persona-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .persona-card.users .persona-avatar {
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(6, 182, 212, 0.3));
+        }
+
+        .persona-card.owners .persona-avatar {
+            background: linear-gradient(135deg, rgba(244, 114, 182, 0.2), rgba(236, 72, 153, 0.3));
+        }
+
+        .persona-card.admins .persona-avatar {
+            background: linear-gradient(135deg, rgba(251, 146, 60, 0.2), rgba(249, 115, 22, 0.3));
+        }
+
+        .persona-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .persona-card .role {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .persona-features {
+            list-style: none;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .persona-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .persona-features .check {
+            color: var(--secondary);
+            margin-top: 0.15rem;
+        }
+
+        /* Platform Agnostic Section */
+        .platform-agnostic {
+            padding: 8rem 4rem;
+        }
+
+        .platform-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .platform-text h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        .platform-text p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .platform-logos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .platform-logo {
+            padding: 1rem 1.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+
+        .platform-logo:hover {
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .integrations-visual {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .integration-node {
+            aspect-ratio: 1;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            transition: all 0.4s;
+        }
+
+        .integration-node:hover {
+            transform: scale(1.05);
+            border-color: var(--primary);
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.2);
+        }
+
+        .integration-node.center {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            grid-column: 2;
+            grid-row: 2;
+        }
+
+        /* Governance Section */
+        .governance {
+            background: linear-gradient(180deg, transparent, rgba(99, 102, 241, 0.05), transparent);
+            padding: 8rem 4rem;
+        }
+
+        .governance-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .governance-header .section-desc {
+            margin: 0 auto;
+        }
+
+        .governance-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .governance-feature {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            gap: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .governance-feature:hover {
+            border-color: var(--primary);
+            transform: translateX(8px);
+        }
+
+        .governance-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(129, 140, 248, 0.2));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .governance-feature h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .governance-feature p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 8rem 4rem;
+            text-align: center;
+        }
+
+        .cta-card {
+            max-width: 900px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(34, 211, 238, 0.1));
+            border: 1px solid var(--card-border);
+            border-radius: 32px;
+            padding: 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 60%);
+            animation: rotate 30s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .cta-card h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-card p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 1;
+            padding: 4rem;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-copy {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            nav {
+                padding: 1rem 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            section {
+                padding: 4rem 2rem;
+            }
+
+            .what-is-grid,
+            .platform-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .capabilities-grid,
+            .personas-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .governance-features {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-row {
+                flex-wrap: wrap;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+            }
+
+            .cta-card {
+                padding: 3rem 2rem;
+            }
+
+            .cta-card h2 {
+                font-size: 2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .integrations-visual {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .integration-node.center {
+                grid-column: auto;
+                grid-row: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="/" class="logo">
+            <div class="logo-icon">&#9670;</div>
+            Agent Catalog
+        </a>
+        <ul class="nav-links">
+            <li><a href="#capabilities">Capabilities</a></li>
+            <li><a href="#governance">Governance</a></li>
+            <li><a href="#personas">For Teams</a></li>
+            <li><a href="#integrations">Integrations</a></li>
+            <li><a href="#">Docs</a></li>
+        </ul>
+        <div class="nav-cta">
+            <a href="#" class="btn btn-ghost">Sign In</a>
+            <a href="#" class="btn btn-primary">Get Started</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="badge">
+            <span class="badge-dot"></span>
+            Plan-Time Governance for AI
+        </div>
+        <h1>
+            The <span class="gradient-text">Central Registry</span><br>
+            for AI Agents & MCP Servers
+        </h1>
+        <p class="hero-subtitle">
+            More than a catalog. Agent Catalog provides plan-time governance, reputation tracking,
+            versioning, and orchestration insights for your entire AI agent ecosystem.
+        </p>
+        <div class="hero-cta">
+            <a href="#" class="btn btn-primary btn-large">Explore the Catalog</a>
+            <a href="#" class="btn btn-ghost btn-large">View Documentation</a>
+        </div>
+        <div class="stats-row">
+            <div class="stat">
+                <div class="stat-value">1,200+</div>
+                <div class="stat-label">Registered Agents</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">450+</div>
+                <div class="stat-label">MCP Servers</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">99.7%</div>
+                <div class="stat-label">Avg Uptime</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">50M+</div>
+                <div class="stat-label">Daily Invocations</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What Is Section -->
+    <section class="what-is">
+        <div class="what-is-grid">
+            <div class="what-is-content">
+                <span class="section-label">What is Agent Catalog?</span>
+                <h3>Your Single Source of Truth for AI Agent Governance</h3>
+                <p>
+                    Agent Catalog is the central registry and governance platform for AI agents and MCP servers.
+                    It provides visibility into your agent ecosystem, enabling informed decisions at plan time
+                    rather than runtime.
+                </p>
+                <ul class="feature-list">
+                    <li>
+                        <span class="icon">&#10003;</span>
+                        Discover and browse agents & MCP servers
+                    </li>
+                    <li>
+                        <span class="icon">&#10003;</span>
+                        Track agent reputation and performance metrics
+                    </li>
+                    <li>
+                        <span class="icon">&#10003;</span>
+                        Understand sub-agent relationships and dependencies
+                    </li>
+                    <li>
+                        <span class="icon">&#10003;</span>
+                        Access best practices and invocation examples
+                    </li>
+                    <li>
+                        <span class="icon">&#10003;</span>
+                        Manage versioning, evals, and lifecycle
+                    </li>
+                </ul>
+            </div>
+            <div class="diagram-card">
+                <div class="diagram-header">
+                    <div class="diagram-dot"></div>
+                    <div class="diagram-dot"></div>
+                    <div class="diagram-dot"></div>
+                </div>
+                <div class="diagram-content">
+                    <div class="diagram-row">
+                        <span class="diagram-node">Orchestrator</span>
+                        <span class="diagram-arrow">&#8594;</span>
+                        <span class="diagram-node highlight">Agent Catalog</span>
+                        <span class="diagram-arrow">&#8594;</span>
+                        <span class="diagram-node">Agent v2.3</span>
+                    </div>
+                    <div class="diagram-subagents">
+                        <span class="diagram-subagent">&#8627; Research Agent</span>
+                        <span class="diagram-subagent">&#8627; Writer Agent</span>
+                        <span class="diagram-subagent">&#8627; Review Agent</span>
+                    </div>
+                    <div class="diagram-row" style="margin-top: 1rem; justify-content: center;">
+                        <span class="diagram-node" style="background: rgba(244, 114, 182, 0.15); border-color: rgba(244, 114, 182, 0.3);">
+                            Reputation: 98.2% &#11088;
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capabilities Section -->
+    <section class="capabilities" id="capabilities">
+        <div class="capabilities-header">
+            <span class="section-label">Capabilities</span>
+            <h2 class="section-title">Everything You Need for Agent Governance</h2>
+            <p class="section-desc">
+                Comprehensive tooling for discovery, monitoring, versioning, and lifecycle management
+                of your AI agent ecosystem.
+            </p>
+        </div>
+        <div class="capabilities-grid">
+            <div class="capability-card">
+                <div class="capability-icon purple">&#9734;</div>
+                <h3>Reputation & Performance</h3>
+                <p>Track how agents perform over time with reputation scores, success rates, latency metrics, and user feedback aggregation.</p>
+            </div>
+            <div class="capability-card">
+                <div class="capability-icon cyan">&#9875;</div>
+                <h3>Sub-Agent Relationships</h3>
+                <p>Visualize which agents work together, understand dependencies, and see common orchestration patterns across your ecosystem.</p>
+            </div>
+            <div class="capability-card">
+                <div class="capability-icon pink">&#128218;</div>
+                <h3>Examples & Best Practices</h3>
+                <p>Access curated invocation examples, recommended prompts, and proven patterns for getting the best results from each agent.</p>
+            </div>
+            <div class="capability-card">
+                <div class="capability-icon orange">&#8634;</div>
+                <h3>Versioning & Changelog</h3>
+                <p>Track agent versions, view detailed changelogs, understand breaking changes, and manage smooth version transitions.</p>
+            </div>
+            <div class="capability-card">
+                <div class="capability-icon green">&#128200;</div>
+                <h3>Eval Performance</h3>
+                <p>Monitor how agents perform on standard evaluations, track regression, and compare performance across versions.</p>
+            </div>
+            <div class="capability-card">
+                <div class="capability-icon blue">&#128337;</div>
+                <h3>Lifecycle Management</h3>
+                <p>Plan deprecations, manage decommissioning timelines, and ensure smooth transitions when agents are retired.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Personas Section -->
+    <section class="personas" id="personas">
+        <div class="personas-header">
+            <span class="section-label">Built for Everyone</span>
+            <h2 class="section-title">Different Views for Different Roles</h2>
+            <p class="section-desc">
+                Whether you're using agents, building them, or managing the platform,
+                Agent Catalog has the tools you need.
+            </p>
+        </div>
+        <div class="personas-grid">
+            <div class="persona-card users">
+                <div class="persona-avatar">&#128100;</div>
+                <h3>Users</h3>
+                <p class="role">Agent Consumers</p>
+                <ul class="persona-features">
+                    <li><span class="check">&#10003;</span> Discover available agents</li>
+                    <li><span class="check">&#10003;</span> View reputation scores</li>
+                    <li><span class="check">&#10003;</span> Access usage examples</li>
+                    <li><span class="check">&#10003;</span> See best practices</li>
+                    <li><span class="check">&#10003;</span> Compare alternatives</li>
+                </ul>
+            </div>
+            <div class="persona-card owners">
+                <div class="persona-avatar">&#128736;</div>
+                <h3>Owners</h3>
+                <p class="role">Agent Builders & Orchestrators</p>
+                <ul class="persona-features">
+                    <li><span class="check">&#10003;</span> Publish & version agents</li>
+                    <li><span class="check">&#10003;</span> Monitor performance metrics</li>
+                    <li><span class="check">&#10003;</span> Define sub-agent patterns</li>
+                    <li><span class="check">&#10003;</span> Manage eval benchmarks</li>
+                    <li><span class="check">&#10003;</span> Plan deprecations</li>
+                </ul>
+            </div>
+            <div class="persona-card admins">
+                <div class="persona-avatar">&#9881;</div>
+                <h3>Admins</h3>
+                <p class="role">Platform Engineers</p>
+                <ul class="persona-features">
+                    <li><span class="check">&#10003;</span> Configure governance rules</li>
+                    <li><span class="check">&#10003;</span> Manage access controls</li>
+                    <li><span class="check">&#10003;</span> Set compliance policies</li>
+                    <li><span class="check">&#10003;</span> Monitor ecosystem health</li>
+                    <li><span class="check">&#10003;</span> Audit agent usage</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Platform Agnostic Section -->
+    <section class="platform-agnostic" id="integrations">
+        <div class="platform-content">
+            <div class="platform-text">
+                <span class="section-label">Platform Agnostic</span>
+                <h2>Works With Your Stack</h2>
+                <p>
+                    Agent Catalog is cloud-agnostic and framework-independent.
+                    It integrates with any agent platform, cloud provider, or orchestration framework.
+                    No vendor lock-in, just governance.
+                </p>
+                <div class="platform-logos">
+                    <span class="platform-logo">AWS Bedrock</span>
+                    <span class="platform-logo">Azure AI</span>
+                    <span class="platform-logo">Google Vertex</span>
+                    <span class="platform-logo">LangChain</span>
+                    <span class="platform-logo">AutoGen</span>
+                    <span class="platform-logo">CrewAI</span>
+                    <span class="platform-logo">OpenAI</span>
+                    <span class="platform-logo">Anthropic</span>
+                </div>
+            </div>
+            <div class="integrations-visual">
+                <div class="integration-node">&#9729;</div>
+                <div class="integration-node">&#128640;</div>
+                <div class="integration-node">&#9881;</div>
+                <div class="integration-node">&#128279;</div>
+                <div class="integration-node center">&#9670;</div>
+                <div class="integration-node">&#128202;</div>
+                <div class="integration-node">&#128187;</div>
+                <div class="integration-node">&#129302;</div>
+                <div class="integration-node">&#128161;</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Governance Section -->
+    <section class="governance" id="governance">
+        <div class="governance-header">
+            <span class="section-label">Plan-Time Governance</span>
+            <h2 class="section-title">Governance Before Execution</h2>
+            <p class="section-desc">
+                Make informed decisions about which agents to use before they run.
+                Plan-time governance ensures quality, compliance, and reliability.
+            </p>
+        </div>
+        <div class="governance-features">
+            <div class="governance-feature">
+                <div class="governance-icon">&#128274;</div>
+                <div>
+                    <h4>Pre-Execution Validation</h4>
+                    <p>Validate agent selection against policies before orchestration begins, preventing issues before they occur.</p>
+                </div>
+            </div>
+            <div class="governance-feature">
+                <div class="governance-icon">&#128208;</div>
+                <div>
+                    <h4>Compliance Checkpoints</h4>
+                    <p>Ensure selected agents meet regulatory requirements and organizational policies at planning time.</p>
+                </div>
+            </div>
+            <div class="governance-feature">
+                <div class="governance-icon">&#128269;</div>
+                <div>
+                    <h4>Dependency Analysis</h4>
+                    <p>Understand the full chain of sub-agents and MCP servers before committing to an execution plan.</p>
+                </div>
+            </div>
+            <div class="governance-feature">
+                <div class="governance-icon">&#9888;</div>
+                <div>
+                    <h4>Risk Assessment</h4>
+                    <p>Evaluate potential risks based on agent reputation, version stability, and historical performance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-card">
+            <h2>Ready to Govern Your <span class="gradient-text">Agent Ecosystem</span>?</h2>
+            <p>Join organizations that trust Agent Catalog for plan-time governance of their AI agents and MCP servers.</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary btn-large">Get Started Free</a>
+                <a href="#" class="btn btn-ghost btn-large">Schedule a Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <a href="/" class="logo">
+                <div class="logo-icon">&#9670;</div>
+                Agent Catalog
+            </a>
+            <div class="footer-links">
+                <a href="#">Documentation</a>
+                <a href="#">API Reference</a>
+                <a href="#">GitHub</a>
+                <a href="#">Community</a>
+                <a href="#">Blog</a>
+            </div>
+            <p class="footer-copy">&copy; 2025 Agent Catalog. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
